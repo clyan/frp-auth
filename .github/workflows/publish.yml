@@ -1,0 +1,31 @@
+name: frp权限验证
+
+on: 
+  push: 
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 
+        uses: actions/checkout@master
+
+      - name: 
+        uses: actions/setup-node@v1
+        with: 
+          node-version: 14.0.0
+      
+      - name: 安装依赖
+        run: npm install --production
+
+      - name: 开始部署
+        uses:  easingthemes/ssh-deploy@v2.1.5
+        env:
+          ARGS: "-rltgoDzvO --delete"
+          SOURCE: "./"
+          SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
+          REMOTE_HOST: ${{ secrets.REMOTE_HOST }}
+          REMOTE_USER: ${{ secrets.REMOTE_USER }}
+          TARGET: ${{ secrets.REMOTE_TARGET }}

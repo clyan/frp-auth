@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>登录</title>
+    <!-- 引入样式 -->
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/element-ui/lib/theme-chalk/index.css"
+    />
+    <style>
+      html {
+        font-size: 62.5%;
+      }
+
+      html,body,
+      .container {
+        height: 100vh;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+      }
+      .header {
+        height: 8rem;
+        text-align: center;
+      }
+      .main {
+        display: flex;
+        justify-content: center;
+        flex: 1;
+      }
+      .form-wrapper {
+      }
+      .form {
+        flex-direction: column;
+        width: 40rem;
+      }
+      .form-header {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+      }
+      .form-header .change {
+        font-size: 1.6rem;
+        line-height: 4.44rem;
+      }
+      .form-header h1 {
+        flex: 0 0 8rem;
+        text-align: right;
+      }
+      .form-header .change {
+        font-size: 1.6rem;
+        line-height: 4.44rem;
+        text-decoration: none;
+        color: #409eff;
+      }
+    </style>
+
+    <style>
+      * {
+        margin: 0em;
+        padding: 0em;
+      }
+
+      body {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+        font-family: "Open Sans";
+        font-weight: 100;
+        margin: 0em;
+        padding: 0em;
+      }
+
+      /* Start the loader code, first, let's align it the center of screen */
+      .loader {
+        position: absolute;
+        color: #f2f2f2;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        -moz-transform: translate(-50%, -50%);
+        -mos-transform: translate(-50%, -50%);
+        -o-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        text-align: center;
+        /* disable selection and cursor changes */
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor: default;
+      }
+
+      /* Text align it the center of screen and connect the looped animation for 2.5 seconds */
+      .loader .text {
+        position: absolute;
+        top: 1.8em;
+        left: 0.4em;
+        z-index: 5;
+        font-size: 2em;
+        text-transform: uppercase;
+        -webkit-animation: text 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite
+          normal;
+        -moz-animation: text 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        -ms-animation: text 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        -o-animation: text 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        animation: text 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+      }
+
+      /* Create a container for animation*/
+      .spinner {
+        position: relative;
+        width: 5em;
+        height: 5em;
+        color: #fff;
+      }
+
+      .spinner:before,
+      .spinner:after {
+        content: "";
+        position: relative;
+        display: block;
+      }
+
+      /* Create cube and set animation*/
+      .spinner:before {
+        -webkit-animation: spinner 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite
+          normal;
+        -moz-animation: spinner 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite
+          normal;
+        -ms-animation: spinner 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite
+          normal;
+        -o-animation: spinner 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        animation: spinner 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        width: 10em;
+        height: 10em;
+        background-color: #db2f00;
+      }
+
+      /* Create shadow and set animation*/
+      .spinner:after {
+        -webkit-animation: shadow 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite
+          normal;
+        -moz-animation: shadow 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite
+          normal;
+        -ms-animation: shadow 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        -o-animation: shadow 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        animation: shadow 2.5s cubic-bezier(0.75, 0, 0.5, 1) infinite normal;
+        position: relative;
+        bottom: -1.75em;
+        height: 0.25em;
+        border-radius: 50%;
+        background-color: #322b27;
+      }
+
+      /* Animation keys */
+      /* from cube to circle */
+      @-webkit-keyframes spinner {
+        50% {
+          -webkit-border-radius: 50%;
+          -webkit-transform: scale(0.5) rotate(360deg);
+          background-color: #13a3a5;
+        }
+        100% {
+          -webkit-transform: scale(1) rotate(720deg);
+          background-color: #db2f00;
+        }
+      }
+
+      @-moz-keyframes spinner {
+        50% {
+          -moz-border-radius: 50%;
+          -moz-transform: scale(0.5) rotate(360deg);
+          background-color: #13a3a5;
+        }
+        100% {
+          -moz-transform: scale(1) rotate(720deg);
+          background-color: #db2f00;
+        }
+      }
+
+      @-mos-keyframes spinner {
+        50% {
+          -mos-border-radius: 50%;
+          -mos-transform: scale(0.5) rotate(360deg);
+          background-color: #13a3a5;
+        }
+        100% {
+          -mos-transform: scale(1) rotate(720deg);
+          background-color: #db2f00;
+        }
+      }
+
+      @-o-keyframes spinner {
+        50% {
+          -o-border-radius: 50%;
+          -o-transform: scale(0.5) rotate(360deg);
+          background-color: #13a3a5;
+        }
+        100% {
+          -o-transform: scale(1) rotate(720deg);
+          background-color: #db2f00;
+        }
+      }
+
+      @keyframes spinner {
+        50% {
+          border-radius: 50%;
+          transform: scale(0.5) rotate(360deg);
+          background-color: #13a3a5;
+        }
+        100% {
+          transform: scale(1) rotate(720deg);
+          background-color: #db2f00;
+        }
+      }
+
+      /* animation shadow */
+      @-webkit-keyframes shadow {
+        50% {
+          -webkit-transform: scale(0.5);
+          background-color: #322b27;
+        }
+      }
+
+      @-moz-keyframes shadow {
+        50% {
+          -moz-transform: scale(0.5);
+          background-color: #322b27;
+        }
+      }
+
+      @-mos-keyframes shadow {
+        50% {
+          -mos-transform: scale(0.5);
+          background-color: #322b27;
+        }
+      }
+
+      @-o-keyframes shadow {
+        50% {
+          -o-transform: scale(0.5);
+          background-color: #322b27;
+        }
+      }
+
+      @keyframes shadow {
+        50% {
+          transform: scale(0.5);
+          background-color: #322b27;
+        }
+      }
+
+      /* animation text */
+      @-webkit-keyframes text {
+        0% {
+          -webkit-transform: scale(1, 1);
+        }
+        50% {
+          -webkit-transform: scale(0.5, 0.5);
+        }
+        100% {
+          -webkit-transform: scale(1, 1);
+        }
+      }
+
+      @-moz-keyframes text {
+        0% {
+          -moz-transform: scale(1, 1);
+        }
+        50% {
+          -moz-transform: scale(0.5, 0.5);
+        }
+        100% {
+          -moz-transform: scale(1, 1);
+        }
+      }
+
+      @-mos-keyframes text {
+        0% {
+          -mos-transform: scale(1, 1);
+        }
+        50% {
+          -mos-transform: scale(0.5, 0.5);
+        }
+        100% {
+          -mos-transform: scale(1, 1);
+        }
+      }
+
+      @-o-keyframes text {
+        0% {
+          -o-transform: scale(1, 1);
+        }
+        50% {
+          -o-transform: scale(0.5, 0.5);
+        }
+        100% {
+          -o-transform: scale(1, 1);
+        }
+      }
+
+      @keyframes text {
+        0% {
+          transform: scale(1, 1);
+        }
+        50% {
+          transform: scale(0.5, 0.5);
+        }
+        100% {
+          transform: scale(1, 1);
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="appLoading" class="loader">
+        <span class="text">Loading</span>
+        <span class="spinner"></span>
+    </div>
+    <div style="display: none" class="container" id="app">
+      <div class="header">
+        <h1>专属内网穿透</h1>
+      </div>
+      <div class="main">
+        <div class="form-wrapper">
+          <div class="form-header">
+            <h1>{{ currentPageMode }}</h1>
+            <a class="change" href="javascript:void(0)" @click="changeMode">
+              {{pageMode.name}}
+            </a>
+          </div>
+          <!-- 登录 -->
+          <el-form
+            key="loginForm"
+            v-if="!pageMode.mode"
+            class="form"
+            ref="loginForm"
+            :rules="rules"
+            :model="form"
+            label-width="80px"
+          >
+            <el-form-item label="邮箱:" prop="username">
+              <el-input v-model="form.username"></el-input>
+            </el-form-item>
+            <el-form-item label="密码:" prop="password">
+              <el-input type="password" v-model="form.password"></el-input>
+            </el-form-item>
+            <el-form-item label="验证码:" prop="verfiy">
+              <el-col :span="16">
+                <el-input v-model="form.verfiy"></el-input>
+              </el-col>
+              <el-col :span="8">
+                <el-button v-model="form.verfiy" @click="getVerfiy"
+                  >{{ verfiyTxt }}</el-button
+                >
+              </el-col>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="login">登录</el-button>
+            </el-form-item>
+          </el-form>
+
+          <!-- 注册form -->
+          <el-form
+            key="registerForm"
+            v-else
+            class="form"
+            ref="registerForm"
+            :rules="registerrRles"
+            :model="form"
+            label-width="80px"
+          >
+            <el-form-item label="邮箱:" prop="username">
+              <el-input v-model="form.username"></el-input>
+            </el-form-item>
+            <el-form-item label="密码:" prop="password">
+              <el-input type="password" v-model="form.password"></el-input>
+            </el-form-item>
+            <el-form-item label="确认密码:" prop="password1">
+              <el-input type="password" v-model="form.password1"></el-input>
+            </el-form-item>
+            <el-form-item label="验证码:" prop="verfiy">
+              <el-col :span="16">
+                <el-input v-model="form.verfiy"></el-input>
+              </el-col>
+              <el-col :span="8">
+                <el-button @click="getVerfiy">{{ verfiyTxt }}</el-button>
+              </el-col>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="register"> 注册 </el-button>
+            </el-form-item>
+          </el-form>
+        </div>
+      </div>
+    </div>
+  </body>
+  <!-- 引入组件库 -->
+  <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.js"></script>
+  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <!-- 引入组件库 -->
+  <script src="https://unpkg.com/element-ui/lib/index.js"></script>
+  <script>
+    const app = new Vue({
+      el: "#app",
+      data() {
+        const checkEmail = (rule, value, callback) => {
+          const mailReg = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+          if (!value) {
+            return callback(new Error("邮箱不能为空"));
+          }
+          setTimeout(() => {
+            if (mailReg.test(value)) {
+              callback();
+            } else {
+              callback(new Error("请输入正确的邮箱格式"));
+            }
+          }, 100);
+        };
+        const checkPwd = (rule, value, callback) => {
+          if (!value) {
+            return callback(new Error("请再次输入密码"));
+          }
+          if (value === this.form.password) {
+            callback();
+          } else {
+            callback(new Error("两次密码输入不一致"));
+          }
+        };
+        return {
+          form: {
+            username: "",
+            password: "",
+            password1: "",
+            verfiy: "",
+          },
+          rules: {
+            username: [
+              { required: true, validator: checkEmail, trigger: "blur" },
+            ],
+            password: [
+              { required: true, message: "请输入密码", trigger: "blur" },
+            ],
+            verfiy: [
+              {
+                required: true,
+                min: 6,
+                max: 6,
+                message: "6位验证码",
+                trigger: "blur",
+              },
+            ],
+          },
+          registerrRles: {
+            username: [
+              { required: true, validator: checkEmail, trigger: "blur" },
+            ],
+            password: [
+              { required: true, message: "请输入密码", trigger: "blur" },
+            ],
+            password1: [{ validator: checkPwd, trigger: "blur" }],
+            verfiy: [{ required: true, message: "6位验证码", trigger: "blur" }],
+          },
+          pageMode: {
+            mode: 0,
+            name: "尚未账号，立即去注册",
+          },
+          verfiyTxt: "获取验证码",
+          timer: null,
+        };
+      },
+      methods: {
+        async register() {
+          this.$refs["registerForm"].validate(async (valid) => {
+            if (valid) {
+              const { data } = await axios.post("/register", {
+                username: this.form.username,
+                password: this.form.password,
+                verfiy: this.form.verfiy,
+              });
+              if (!data) {
+                this.$message.error("该用户已存在");
+              } else {
+                this.$message.success("注册成功");
+                this.changeMode();
+              }
+            } else {
+              return false;
+            }
+          });
+        },
+        async login() {
+          this.$refs["loginForm"].validate(async (valid) => {
+            if (valid) {
+              const { data } = await axios.post("/login", {
+                ...this.form,
+              });
+              let result = data.data;
+              if (data.code === 0) {
+                this.$message.error(data.msg);
+              } else {
+                location.href = "/index";
+              }
+            } else {
+              return false;
+            }
+          });
+        },
+        async getVerfiy() {
+          this.$refs[this.currentPageForm].validateField(
+            "username",
+            async (errorMessage) => {
+              if (errorMessage) return false;
+              const { data } = await axios.post("/verfiy", {
+                username: this.form.username,
+              });
+              if (data && data.data && data.data.flag) {
+                let i = data.data.ex;
+                this.residueTime(i);
+              } else {
+                this.$message.error(data.msg);
+              }
+            }
+          );
+        },
+        residueTime(time) {
+          this.verfiyTxt = time + "s";
+          this.timer && clearTimeout(this.timer);
+          if (time <= 0) {
+            this.time = null;
+            return (this.verfiyTxt = "重新获取验证码");
+          }
+          this.timer = setTimeout(() => {
+            time--;
+            this.residueTime(time);
+          }, 1000);
+        },
+        resetVerfiy() {
+          this.verfiyTxt = "获取验证码";
+          this.timer && clearTimeout(this.timer);
+          this.timer = null;
+        },
+        changeMode() {
+          this.reset();
+          this.pageMode.mode = this.pageMode.mode === 0 ? 1 : 0;
+          this.pageMode.name =
+            this.pageMode.mode === 0 ? "尚未账号，立即去注册" : "切换到登录";
+          this.pageMode.mode === 0
+            ? this.setTitle("登录")
+            : this.setTitle("注册");
+        },
+        setTitle() {
+          const title = this.currentPageMode;
+          window.document.title = title;
+        },
+        reset() {
+          this.$refs[this.currentPageForm].resetFields();
+          this.resetVerfiy();
+        },
+      },
+      computed: {
+        currentPageMode() {
+          return this.pageMode.mode ? "注册" : "登录";
+        },
+        currentPageForm() {
+          return this.pageMode.mode === 0 ? "loginForm" : "registerForm";
+        },
+      },
+      mounted() {
+        document.getElementById("app").style.display = "block";
+        document.getElementById("appLoading").style.display = "none";
+      },
+    });
+  </script>
+</html>
