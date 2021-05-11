@@ -8,7 +8,6 @@ module.exports = (options, app) => {
     url = url.split('?')[0];
     // 判断当前路由是否需要验证token
     const flag = routerAuth.includes(url);
-    console.log('flag', flag);
     if (flag) {
       await next();
     } else {

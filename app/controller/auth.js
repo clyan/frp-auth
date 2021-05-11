@@ -80,26 +80,31 @@ class AuthController extends Controller {
       return;
     }
 
-    const { meta_username, meta_password } = data.content.user.metas;
-    const user = await this.ctx.service.user.findByNameAndPwd({ username: meta_username, password: meta_password });
+    const { username, password } = data.content.user.metas;
+    console.log('data.content.user.metas', data.content.user.metas);
+    const user = await this.ctx.service.user.findByNameAndPwd({ username, password });
+    console.log('user', user);
     if (user.length <= 0) {
       this.ctx.body = {
         reject: true,
         reject_reason: '请检查账号或密码是否正确，没有账号先注册',
       };
+      return;
     }
-    const { _id } = user;
+    const { _id } = user[0];
     const domain = await this.ctx.service.domain.findByUserId(_id);
     if (domain.length <= 0) {
       this.ctx.body = {
         reject: true,
         reject_reason: '该账号未注册该域名，请确认',
       };
+      return;
     }
     this.ctx.body = {
       reject: false,
       unchange: true,
     };
+    return;
   }
 }
 
