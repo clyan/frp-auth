@@ -64,12 +64,22 @@ class AuthController extends Controller {
   }
   async frpAuth() {
     const data = this.ctx.request.body;
+    console.log('frpAuth', data);
+    if (Object.keys(data).length <= 0) {
+      this.ctx.body = {
+        reject: true,
+        reject_reason: '请检查客户端meta数据',
+      };
+      return;
+    }
     if (!(data.content && data.content.user && data.content.user.metas)) {
       this.ctx.body = {
         reject: true,
         reject_reason: '请检查客户端meta数据',
       };
+      return;
     }
+
     const { meta_username, meta_password } = data.content.user.metas;
     const user = await this.ctx.service.user.findByNameAndPwd({ username: meta_username, password: meta_password });
     if (user.length <= 0) {

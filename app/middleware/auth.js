@@ -4,9 +4,11 @@ module.exports = (options, app) => {
     // 拿到不需要验证的token的路由
     const routerAuth = app.config.routerAuth;
     // 获取当前路由
-    const url = ctx.url;
+    let url = ctx.url;
+    url = url.split('?')[0];
     // 判断当前路由是否需要验证token
     const flag = routerAuth.includes(url);
+    console.log('flag', flag);
     if (flag) {
       await next();
     } else {
