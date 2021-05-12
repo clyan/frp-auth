@@ -14,7 +14,7 @@ module.exports = appInfo => {
   // use for cookie sign key, should change to your own and keep security
   config.keys = appInfo.name + '_1588070284144_1806';
   // 验证码过期时间
-  config.verfiyCodeExpire = 2000;
+  config.verfiyCodeExpire = 120;
 
   // add your middleware config here
   config.middleware = [ 'errorHandler', 'auth' ];
@@ -25,7 +25,7 @@ module.exports = appInfo => {
   // add your user config here
   const userConfig = {
     mongoose: {
-      url: process.env.EGG_MONGODB_URL || 'mongodb://127.0.0.1:27017/taskmanage',
+      url: process.env.SERVER_MONGODB_URL + '/taskmanage' || 'mongodb://127.0.0.1:27017/taskmanage',
       options: {
         server: { poolSize: 20 },
         useNewUrlParser: true,
@@ -45,8 +45,8 @@ module.exports = appInfo => {
     redis: {
       client: {
         port: 6379,
-        host: '',
-        password: '',
+        host: '127.0.0.1',
+        password: process.env.SERVER_REDIS_PWD || '',
         db: 0,
       },
     },
@@ -56,8 +56,8 @@ module.exports = appInfo => {
         secureConnection: true,
         port: 465,
         auth: {
-          user: '',
-          pass: '',
+          user: process.env.SERVER_SMTP_USER || '',
+          pass: process.env.SERVER_SMTP_PASS || '',
         },
       },
     },
@@ -70,7 +70,7 @@ module.exports = appInfo => {
     },
   };
   config.jwt = {
-    secret: 'Great4-M',
+    secret: process.env.SERVER_JWT_SECRET || 'token',
     enable: true, // default is false
     match: '/jwt', // optional
   };

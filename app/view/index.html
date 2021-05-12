@@ -27,18 +27,11 @@
       .main {
         display: flex;
         justify-content: center;
-        flex: 1;
       }
-      .form-wrapper {
-      }
-      .form {
-        flex-direction: column;
-        width: 40rem;
-      }
+
       .form-header {
         display: flex;
         flex-direction: row;
-        justify-content: center;
         padding: 0 0 3rem 0;
       }
       .form-header .change {
@@ -47,13 +40,32 @@
       }
       .form-header h1 {
         flex: 0 0 8rem;
-        text-align: right;
       }
       .form-header .change {
         font-size: 1.6rem;
         line-height: 4.44rem;
         text-decoration: none;
         color: #409eff;
+      }
+      .download h1{
+        
+      }
+      .download-item {
+        position: relative;
+        height: 8rem;
+        width: 20rem;
+        background: #409eff;
+        color: #fff;
+        border-radius: 11px;
+        margin: 1rem auto 0 auto;
+      }
+      .download-item a {
+        display: inline-block;
+        width: 100%;
+        color: #fff;
+        line-height: 8rem;
+        text-align: center;
+        font-size: 1.78rem;
       }
     </style>
     <style>
@@ -321,21 +333,32 @@
     </div>
     <div style="display: none" class="container" id="app">
       <div class="header">
-        <h1>专属内网穿透</h1>
+        <h1 style="font-size: 3.4rem;">专属内网穿透</h1>
       </div>
       <div class="main">
-        <div class="form-wrapper">
-          <div class="form-header center">
-            <h1>注册域名</h1>
+        <div class="main-wrapper">
+          <div class="form-wrapper">
+            <div class="form-header center">
+              <h1>注册域名</h1>
+            </div>
+            <el-form key="registerForm" class="form" ref="registerForm" :rules="registerrRlues" :model="form" label-width="80px">
+              <el-form-item label="域名:" prop="domain">
+                <el-input v-model="form.domain"></el-input>
+              </el-form-item>
+              <el-form-item>
+                <el-button type="primary" @click="applyDomain"> 注册 </el-button>
+              </el-form-item>
+            </el-form>
           </div>
-          <el-form key="registerForm" class="form" ref="registerForm" :rules="registerrRlues" :model="form" label-width="80px">
-            <el-form-item label="域名:" prop="domain">
-              <el-input v-model="form.domain"></el-input>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="primary" @click="applyDomain"> 注册 </el-button>
-            </el-form-item>
-          </el-form>
+          <div class="download">
+            <h1> 下载区域 </h1>
+            <div class="download-item">
+              <a href="https://github.com/fatedier/frp/releases/download/v0.36.2/frp_0.36.2_windows_amd64.zip">windows客户端</a>
+            </div>
+            <div class="download-item">
+              <a href="https://github.com/fatedier/frp/releases/download/v0.36.2/frp_0.36.2_darwin_amd64.tar.gz">mac客户端</a>
+            </div>  
+          </div>
         </div>
       </div>
     </div>
@@ -370,6 +393,7 @@
           } else {
             this.$message.success(data.msg);
           }
+          this.$refs["registerForm"].resetFields();
         },
       },
       mounted(){

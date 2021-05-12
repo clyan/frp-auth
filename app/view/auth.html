@@ -32,11 +32,8 @@
         justify-content: center;
         flex: 1;
       }
-      .form-wrapper {
-      }
       .form {
         flex-direction: column;
-        width: 40rem;
       }
       .form-header {
         display: flex;
@@ -48,7 +45,7 @@
         line-height: 4.44rem;
       }
       .form-header h1 {
-        flex: 0 0 8rem;
+        flex: 0 0 7rem;
         text-align: right;
       }
       .form-header .change {
@@ -324,7 +321,7 @@
     </div>
     <div style="display: none" class="container" id="app">
       <div class="header">
-        <h1>专属内网穿透</h1>
+        <h1 style="font-size: 3.4rem;">专属内网穿透</h1>
       </div>
       <div class="main">
         <div class="form-wrapper">
@@ -351,10 +348,10 @@
               <el-input type="password" v-model="form.password"></el-input>
             </el-form-item>
             <el-form-item label="验证码:" prop="verfiy">
-              <el-col :span="16">
+              <el-col :span="12">
                 <el-input v-model="form.verfiy"></el-input>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="10" :offset="2" style="min-width: 11.2rem;">
                 <el-button v-model="form.verfiy" @click="getVerfiy"
                   >{{ verfiyTxt }}</el-button
                 >
@@ -385,10 +382,10 @@
               <el-input type="password" v-model="form.password1"></el-input>
             </el-form-item>
             <el-form-item label="验证码:" prop="verfiy">
-              <el-col :span="16">
+              <el-col :span="12">
                 <el-input v-model="form.verfiy"></el-input>
               </el-col>
-              <el-col :span="8">
+              <el-col :span="10" :offset="2" style="min-width: 11.2rem;">
                 <el-button @click="getVerfiy">{{ verfiyTxt }}</el-button>
               </el-col>
             </el-form-item>
@@ -533,7 +530,7 @@
           this.timer && clearTimeout(this.timer);
           if (time <= 0) {
             this.time = null;
-            return (this.verfiyTxt = "重新获取验证码");
+            return (this.verfiyTxt = "重新获取");
           }
           this.timer = setTimeout(() => {
             time--;
@@ -557,6 +554,10 @@
         setTitle() {
           const title = this.currentPageMode;
           window.document.title = title;
+        },
+        setfield(username, password) {
+          this.form.password = password;
+          this.form.username = username;
         },
         reset() {
           this.$refs[this.currentPageForm].resetFields();
