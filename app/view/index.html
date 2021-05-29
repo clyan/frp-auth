@@ -349,7 +349,7 @@
             <div class="form-header center">
               <h1>注册域名<span style="color: red; font-size: 14px;padding-left: 1rem;">*（一人仅支持一个）</span></h1>
             </div>
-            <el-form key="registerForm" class="form" ref="registerForm" :rules="registerrRlues" :model="form" label-width="80px">
+            <el-form key="registerForm" class="form" ref="registerForm" :rules="registerRlues" :model="form" label-width="80px">
               <el-form-item label="域名:" prop="domain">
                 <el-input v-model="form.domain"></el-input>
               </el-form-item>
@@ -422,7 +422,7 @@
           form: {
             domain: ''
           },
-          registerrRlues:{
+          registerRlues:{
             domain: [
               { required: true, message: '请输入域名', trigger: 'blur' }
             ],
@@ -432,16 +432,23 @@
       },
       methods: {
         async applyDomain() {
-          const { data } = await axios.post('/applyDomain', {
+          this.$refs["registerForm"].validate(async (valid) => {
+            if (!valid) {
+              return false;
+            }
+            this.loading = true;
+            const { data } = await axios.post('/applyDomain', {
             ...this.form
+            });
+            this.loading = false;
+            if(data.code === 0 ) {
+              this.$message.error(data.msg);
+            } else {
+              this.$message.success(data.msg);
+              this.getAllDomain();
+            }
+            this.$refs["registerForm"].resetFields();
           });
-          if(data.code === 0 ) {
-            this.$message.error(data.msg);
-          } else {
-            this.$message.success(data.msg);
-            this.getAllDomain();
-          }
-          this.$refs["registerForm"].resetFields();
         },
         async getAllDomain() {
           const { data } = await axios.get('/domains', {});
