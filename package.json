@@ -37,8 +37,8 @@
   },
   "scripts": {
     "start": "egg-scripts start  --daemon  --port=7001 --title=frp-manage --ignore-stderr",
-    "stop": " egg-scripts stop --title=frp-manage",
-    "dev": " egg-bin dev",
+    "stop": "egg-scripts stop --title=frp-manage",
+    "dev": "egg-bin dev",
     "debug": "egg-bin debug",
     "test": "npm run lint -- --fix && npm run test-local",
     "test-local": "egg-bin test",
