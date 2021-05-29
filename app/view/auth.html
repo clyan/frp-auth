@@ -348,17 +348,17 @@
               <el-input type="password" v-model="form.password"></el-input>
             </el-form-item>
             <el-form-item label="验证码:" prop="verfiy">
-              <el-col :span="12">
+              <el-col :span="10">
                 <el-input v-model="form.verfiy"></el-input>
               </el-col>
-              <el-col :span="10" :offset="2" style="min-width: 11.2rem;">
-                <el-button v-model="form.verfiy" @click="getVerfiy"
+              <el-col :span="12" :offset="2" style="min-width: 11.2rem;">
+                <el-button v-model="form.verfiy" :loading="loading" @click="getVerfiy" :disabled="disabled"
                   >{{ verfiyTxt }}</el-button
                 >
               </el-col>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="login">登录</el-button>
+              <el-button type="primary" :loading="loading" @click="login">登录</el-button>
             </el-form-item>
           </el-form>
 
@@ -382,15 +382,15 @@
               <el-input type="password" v-model="form.password1"></el-input>
             </el-form-item>
             <el-form-item label="验证码:" prop="verfiy">
-              <el-col :span="12">
+              <el-col :span="10">
                 <el-input v-model="form.verfiy"></el-input>
               </el-col>
-              <el-col :span="10" :offset="2" style="min-width: 11.2rem;">
-                <el-button @click="getVerfiy">{{ verfiyTxt }}</el-button>
+              <el-col :span="12" :offset="2" style="min-width: 11.2rem;">
+                <el-button :disabled="disabled" :loading="loading" @click="getVerfiy">{{ verfiyTxt }}</el-button>
               </el-col>
             </el-form-item>
             <el-form-item>
-              <el-button type="primary" @click="register"> 注册 </el-button>
+              <el-button type="primary"  :loading="loading" @click="register"> 注册 </el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -467,58 +467,70 @@
             mode: 0,
             name: "尚未账号，立即去注册",
           },
+          disabled: false,
           verfiyTxt: "获取验证码",
           timer: null,
+          loading: false
         };
       },
       methods: {
         async register() {
           this.$refs["registerForm"].validate(async (valid) => {
-            if (valid) {
-              const { data } = await axios.post("/register", {
+            if (!valid) {
+              return false;
+            }
+            this.loading = true;
+            const { data } = await axios.post("/register", {
                 username: this.form.username,
                 password: this.form.password,
                 verfiy: this.form.verfiy,
-              });
-              if (!data) {
-                this.$message.error("该用户已存在");
-              } else {
-                this.$message.success("注册成功");
-                this.changeMode();
-              }
+            });
+            this.loading = false;
+            if (!data) {
+              this.$message.error("该用户已存在");
             } else {
-              return false;
+              this.$message.success("注册成功");
+              this.changeMode();
             }
           });
         },
         async login() {
           this.$refs["loginForm"].validate(async (valid) => {
-            if (valid) {
-              const { data } = await axios.post("/login", {
-                ...this.form,
-              });
-              let result = data.data;
-              if (data.code === 0) {
-                this.$message.error(data.msg);
-              } else {
-                location.href = "/index";
-              }
-            } else {
+            if (!valid) {
               return false;
+            }
+            this.loading = true;
+            const { data } = await axios.post("/login", {
+              password: this.form.password,
+              username: this.form.username,
+              verfiy: this.form.verfiy
+            });
+            this.loading = false;
+            let result = data.data;
+            if (data.code === 0) {
+              this.$message.error(data.msg);
+            } else {
+              location.href = "/index";
             }
           });
         },
         async getVerfiy() {
+          
           this.$refs[this.currentPageForm].validateField(
             "username",
             async (errorMessage) => {
               if (errorMessage) return false;
+              this.loading = true;
               const { data } = await axios.post("/verfiy", {
                 username: this.form.username,
+                type: this.pageMode.mode
               });
+              this.loading = false;
+
               if (data && data.data && data.data.flag) {
                 let i = data.data.ex;
                 this.residueTime(i);
+                this.disabled = true;
               } else {
                 this.$message.error(data.msg);
               }
@@ -530,6 +542,7 @@
           this.timer && clearTimeout(this.timer);
           if (time <= 0) {
             this.time = null;
+            this.disabled = false;
             return (this.verfiyTxt = "重新获取");
           }
           this.timer = setTimeout(() => {
@@ -544,6 +557,8 @@
         },
         changeMode() {
           this.reset();
+          this.disabled = false;
+          this.loading = false;
           this.pageMode.mode = this.pageMode.mode === 0 ? 1 : 0;
           this.pageMode.name =
             this.pageMode.mode === 0 ? "尚未账号，立即去注册" : "切换到登录";

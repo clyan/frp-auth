@@ -25,7 +25,7 @@ module.exports = appInfo => {
   // add your user config here
   const userConfig = {
     mongoose: {
-      url: process.env.SERVER_MONGODB_URL + '/taskmanage' || 'mongodb://127.0.0.1:27017/taskmanage',
+      url: process.env.SERVER_MONGODB_URL + '/frp' || 'mongodb://127.0.0.1:27017/frp',
       options: {
         server: { poolSize: 20 },
         useNewUrlParser: true,

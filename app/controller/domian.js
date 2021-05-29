@@ -27,6 +27,13 @@ class DomainController extends Controller {
     const result = await ctx.service.domain.create({ user_id: id, name: domain });
     return ctx.helper.success({ ctx, msg: '申请成功', res: result });
   }
+  async findAll() {
+    const { ctx } = this;
+    const decode = ctx.state.userinfo;
+    const { id } = decode.data;
+    const domainByUser = await ctx.service.domain.findByUserId(id);
+    return ctx.helper.success({ ctx, msg: '域名列表获取成功', res: domainByUser });
+  }
 }
 
 module.exports = DomainController;

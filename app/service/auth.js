@@ -7,7 +7,7 @@ class AuthService extends Service {
     const mailOptions = {
       from: '2429335889@qq.com',
       to: email,
-      subject: '你的专属内网穿透工具',
+      subject: '欢迎使用该内网穿透服务',
       html: `您本次的验证码为${code}`,
     };
     const ex = this.app.config.verfiyCodeExpire;
@@ -22,6 +22,7 @@ class AuthService extends Service {
         error: null,
       };
     } catch (error) {
+      this.ctx.logger.error(new Error(error));
       return {
         flag: false,
         ex,
@@ -43,7 +44,6 @@ class AuthService extends Service {
     const { service } = this.ctx;
     const { user: UserService } = service;
     const verfiyCode = await this.app.redis.get(info.username + '_verfiyCode');
-  
     if (info.verfiy !== verfiyCode) {
       return {
         verfiy: false,
