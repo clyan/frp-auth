@@ -69,17 +69,20 @@ class AuthController extends Controller {
     const { ctx, service } = this;
     const data = ctx.request.body;
     const { username, type } = data;
-    // // 如果是0 则是登录, 判断邮箱是否注册
-    // if (Number(type) === 0) {
-    //   const users = await service.user.findByName(username);
-    //   if (users.length <= 0) {
-    //     return ctx.helper.success({ ctx, res: null, msg: '该邮箱尚未注册' });
-    //   }
-    // }
-    // const res = await service.auth.verfiy(data);
-    const ex = this.app.config.verfiyCodeExpire;
-    const res = { flag: true, ex };
-    this.app.redis.set(username + '_verfiyCode', 123456, 'EX', ex);
+    // 如果是0 则是登录, 判断邮箱是否注册
+    if (Number(type) === 0) {
+      const users = await service.user.findByName(username);
+      if (users.length <= 0) {
+        return ctx.helper.success({ ctx, res: null, msg: '该邮箱尚未注册' });
+      }
+    }
+    const res = await service.auth.verfiy(data);
+
+    // 测试代码
+    // const ex = this.app.config.verfiyCodeExpire;
+    // const res = { flag: true, ex };
+    // this.app.redis.set(username + '_verfiyCode', 123456, 'EX', ex);
+
     return ctx.helper.success({ ctx, res, msg: res.flag ? '验证码获取成功' : '验证码获取失败,检查邮箱是否存在' });
   }
   // 供frp服务端使用
