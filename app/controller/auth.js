@@ -27,7 +27,7 @@ class AuthController extends Controller {
     // 调用 Service 进行业务处理
     const res = await service.auth.login(payload);
     if (res.verfiy === false) {
-      return ctx.helper.success({ code: 0, ctx, res: {}, msg: '验证码已过期' });
+      return ctx.helper.success({ code: 0, ctx, res: {}, msg: '验证码错误或已过期' });
     }
     if (res.username === false || res.password === false) {
       return ctx.helper.success({ code: 0, ctx, res: {}, msg: '用户邮箱或密码错误' });
@@ -83,7 +83,7 @@ class AuthController extends Controller {
     // const res = { flag: true, ex };
     // this.app.redis.set(username + '_verfiyCode', 123456, 'EX', ex);
 
-    return ctx.helper.success({ ctx, res, msg: res.flag ? '验证码获取成功' : '验证码获取失败,检查邮箱是否存在' });
+    return ctx.helper.success({ ctx, res, msg: res.flag ? '验证码获取成功' : res.error });
   }
   // 供frp服务端使用
   async frpAuth() {
