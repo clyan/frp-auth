@@ -342,6 +342,7 @@
     <div style="display: none" class="container" id="app">
       <div class="header">
         <h1 style="font-size: 3.4rem;">专属内网穿透</h1>
+        <el-button @click="logout" type="text">退出</el-button>
       </div>
       <div class="main">
         <div class="main-wrapper">
@@ -450,6 +451,9 @@
             this.$refs["registerForm"].resetFields();
           });
         },
+        logout() {
+          location.href = "/logout"
+        },
         async getAllDomain() {
           const { data } = await axios.get('/domains', {});
           if(data.code === 0) {
@@ -460,7 +464,6 @@
         }
       },
       created() {
-        console.log("Sads")
         this.getAllDomain();
       },
       mounted(){

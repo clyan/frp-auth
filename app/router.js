@@ -11,12 +11,11 @@ module.exports = app => {
 
   router.post('/register', controller.auth.register);
   router.post('/login', controller.auth.login);
+  router.get('/logout', controller.auth.logout);
   router.post('/verfiy', controller.auth.verfiy);
-
   // 注册域名
   router.post('/applyDomain', controller.domian.applyDomain);
   router.get('/domains', controller.domian.findAll);
-
   // 单独给后端插件提供的拦截
   router.all('/frpAuth', controller.auth.frpAuth);
 };

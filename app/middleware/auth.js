@@ -1,4 +1,12 @@
 'use strict';
+function getToken(ctx) {
+  return ctx.cookies.get('userToken', {
+    encrypt: true,
+  });
+}
+async function decodeToken(app, token) {
+  return app.jwt.verify(token, app.config.jwt.secret);
+}
 module.exports = (options, app) => {
   return async function(ctx, next) {
     // 拿到不需要验证的token的路由
@@ -6,28 +14,37 @@ module.exports = (options, app) => {
     // 获取当前路由
     let url = ctx.url;
     url = url.split('?')[0];
-    // 判断当前路由是否需要验证token
+    // 单独处理/路由，判断是否携带token, 携带说明已经登录过，验证token是否过期，如果没过期则设置为token
+    if (url === '/') {
+      const token = getToken(ctx);
+      if (token !== null) {
+        try {
+          await decodeToken(app, token);
+          ctx.state.userToken = token;
+        } catch (err) {
+          ctx.state.userToken = null;
+        }
+      }
+      return await next();
+    }
+    // 再判断当前路由是否需要验证token
     const flag = routerAuth.includes(url);
     if (flag) {
-      await next();
-    } else {
-      // 获取token,如果没有传入token，则为空
-      const token = ctx.cookies.get('userToken', {
-        encrypt: true,
-      });
-      // 解析token
-      try {
-        const decode = await app.jwt.verify(token, app.config.jwt.secret);
-        ctx.state.userinfo = decode;
-        await next();
-      } catch (err) {
-        ctx.status = 401;
-        ctx.body = {
-          code: 0,
-          message: 'token失效或解析错误',
-          data: null,
-        };
-      }
+      return await next();
+    }
+    // 解析token
+    const token = getToken(ctx);
+    try {
+      const decode = await decodeToken(app, token);
+      ctx.state.userinfo = decode;
+      return await next();
+    } catch (err) {
+      ctx.status = 401;
+      ctx.body = {
+        code: 0,
+        message: 'token失效或解析错误',
+        data: null,
+      };
     }
   };
 };
